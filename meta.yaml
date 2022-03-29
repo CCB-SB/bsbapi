@@ -1,0 +1,32 @@
+package:
+  name: "bsbapi"
+  version: "0.1.0"
+
+source:
+  git_rev: main
+  git_url: https://github.com/CCB-SB/bsbapi.git
+
+build:
+  number: 0
+  script: "{{ PYTHON }} -m pip install . -vv "
+
+requirements:
+  build:
+    - python
+    - setuptools
+
+  run:
+    - python
+    - requests
+    - pandas
+
+test:
+  imports:
+    - bsbapi
+
+about:
+  home: https://www.ccb.uni-saarland.de/bsb
+  summary: API for BusyBee Web
+  dev_url: https://github.com/CCB-SB/bsbapi
+  license: MIT
+  license_family: MIT
