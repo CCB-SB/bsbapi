@@ -18,7 +18,8 @@ def response_validity_checker(response):
     if response.status_code==102:
         Exception("Result not ready for retrieval. Please wait.")
     if response.status_code!=200:
-        exception_text="Server returned status code:"+response.status_code+"."
+        exception_text="Server returned status code:"+str(response.status_code)+"."
+        json_response=response.json()
         if "data" in json_response and "error" in json_response["data"]:
             exception_text+= " Error message: "+json_response["data"]["error"]        
         raise Exception(exception_text)
@@ -29,7 +30,6 @@ def response_validity_checker(response):
 ### API requests
 ###########################
 
-#TODO Maybe rename columns
 def result_bin(job_id):
     assert(isinstance(job_id,str))
     response = requests.get(url=SERVER_URL+'/bin', params={"job_id":job_id})
@@ -95,7 +95,7 @@ def job_state(job_id):
             result.columns=["Job","State"]
             return(result)
     else:
-        exception_text="Server returned status code:"+response.status_code+"."
+        exception_text="Server returned status code:"+str(response.status_code)+"."
         if "data" in json_response and "error" in json_response["data"]:
             exception_text+= " Error message: "+json_response["data"]["error"]
         raise Exception(exception_text)
@@ -167,17 +167,15 @@ def start_job (
     assert(isinstance(functional,bool)) 
     assert(isinstance(plasmids,bool))
     assert(isinstance(binquality,bool))
-    #TODO adapt after checking api
     assert(500<=min_contig)
     assert(min_contig<= border_min_contig)
     assert(border_min_contig<=cluster_min_contig)
-    assert(kmer_length<6 or kmer_length>3)
-    assert(probability<=1 and probabilit>=0)
+    assert(kmer_length<6 and kmer_length>3)
+    assert(probability<=1 and probability>=0)
     assert(transformation in ["clr","standard"])
     assert(0<=compression)
     assert(isinstance(seed,int))
     
-    #TODO check more complex dictionaries
 
     PARAMS={            
     "rename_fasta_headers" : rename_fasta_headers,
@@ -209,7 +207,7 @@ def start_job (
         if "job_id" in response_json:
             return(response_json["job_id"])
         raise Exception("Incorrect content in server response")
-    exception_text="Server returned status code:"+response.status_code+"."
+    exception_text="Server returned status code:"+str(response.status_code)+"."
     if "data" in json_response and "error" in json_response["data"]:
         exception_text+= " Error message: "+json_response["data"]["error"]        
     raise Exception(exception_text)
